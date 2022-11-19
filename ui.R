@@ -1,16 +1,3 @@
-library(readr)
-library(shiny)
-library(ggplot2)
-library(plotly)
-library(lubridate)
-library(zoo)
-library(dplyr)
-library(shinydashboard)
-library(shinyjs)
-
-data <- readRDS("FIFA_ranking.rds") %>%
-        mutate(Date = ymd(paste0(Date, "-01")))
-
 teams <- data %>% arrange(Team) %>% distinct(Team)
 
 dateRangeInput2 <- function(inputId, label, minview = "days", maxview = "decades", ...) {
@@ -28,17 +15,19 @@ shinyUI(
                 dashboardSidebar(width = 250,
                         dateRangeInput2('year',
                                        label = 'Date range:',
-                                       start = "2010-01-01", end = "2020-02-01",
+                                       start = "2010-01-01", end = "2022-10-01",
                                        min = min(data$Date), max = max(data$Date),
                                        separator = " - ", format = "mm/yyyy",
                                        startview = 'year', language = 'en-GB',
                                        minview = "months", maxview = "years"
                         ),
-                        selectInput('x', 'Team 1 (red)', teams$Team, selected = "Chile"),
+                        selectInput('x', 'Team 1 (red)', teams$Team, selected = "Qatar"),
                         div(style = "margin-top:-18px"),
-                        selectInput('y', 'Team 2 (blue)', teams$Team, selected = "Chile"),
+                        selectInput('y', 'Team 2 (blue)', teams$Team, selected = "Ecuador"),
                         div(style = "margin-top:-18px"),
-                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', teams$Team, selected = "Chile")),
+                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', teams$Team, selected = "Senegal")),
+                        div(style = "margin-top:-18px"),
+                        shinyjs::disabled(selectInput('a', 'Team 4 (purple)', teams$Team, selected = "Netherlands")),
                         div(style = "margin-top: 36px"),
                         tags$style(type="text/css", "#down {color: black; margin-left: 60px}"),
                         downloadButton('down', 'Download image', class="butt1")

@@ -1,37 +1,31 @@
-library(readr)
-library(shiny)
-library(ggplot2)
-library(plotly)
-library(lubridate)
-library(zoo)
-library(dplyr)
-options(shiny.usecairo = TRUE)
-
-data <- readRDS("FIFA_ranking.rds") %>%
-        mutate(Date = ymd(paste0(Date, "-01")))
-
 shinyServer(function(input, output, session) {
         
         d <- reactive({
                 req(input$x)
                 req(input$y)
                 req(input$z)
+                req(input$a)
                 req(input$year)
                 
                 data <- data %>%
                         filter(Team == input$x & Date >= input$year[1] & Date <= input$year[2]) %>%
-                        dplyr::select(Team, Rank, Date) %>%
+                        dplyr::select(Team, Rank, Points, Date) %>%
                         mutate(Team = paste("1)", Team)) %>%
                         bind_rows(data %>%
                                           filter(Team == input$y & Team != input$x & Date >= input$year[1] & Date <= input$year[2]) %>%
-                                          dplyr::select(Team, Rank, Date) %>%
+                                          dplyr::select(Team, Rank, Points, Date) %>%
                                           mutate(Team = paste("2)", Team))
 
                         ) %>%
                         bind_rows(data %>%
                                           filter(Team == input$z & Team != input$x & Date >= input$year[1] & Date <= input$year[2]) %>%
-                                          dplyr::select(Team, Rank, Date) %>%
+                                          dplyr::select(Team, Rank, Points, Date) %>%
                                           mutate(Team = paste("3)", Team))
+                        ) %>% 
+                        bind_rows(data %>%
+                                          filter(Team == input$a & Team != input$x & Date >= input$year[1] & Date <= input$year[2]) %>%
+                                          dplyr::select(Team, Rank, Points, Date) %>%
+                                          mutate(Team = paste("4)", Team))
                         )
 
                 # if(input$x != input$y & input$y != input$z & input$x != input$z){
@@ -57,7 +51,13 @@ shinyServer(function(input, output, session) {
                         shinyjs::enable(id = "z")
                 }
         })
-        
+
+        observeEvent(input$z,{
+                if ((input$y != input$x) && (input$z != input$x)) {
+                        shinyjs::enable(id = "a")
+                }
+        })
+
         output$plot <- renderPlotly({
                 q <- d()
                 
@@ -65,10 +65,10 @@ shinyServer(function(input, output, session) {
                 else {b <- round((max(q$Rank) - min(q$Rank))/30, 0) }
                 
                 q$Date <- as.yearmon(q$Date)
-                q$Details <- paste('<br>Team:', q$Team, '<br>Rank: ', q$Rank, '<br>Date: ', q$Date)
+                q$Details <- paste('<br>Team:', q$Team, '<br>Rank: ', q$Rank, '<br>Points: ', q$Points, '<br>Date: ', q$Date)
                 
                 p <- ggplot(data=q, aes(y = Rank, x = Date, colour = Team, label = Details), stat = "density") +
-                        geom_line(size=0.5) + 
+                        geom_line(linewidth=0.5) + 
                         geom_point(size=1.2)
                 
                 p <- p + 
