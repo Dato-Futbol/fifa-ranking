@@ -1,4 +1,4 @@
-teams <- data %>% arrange(Team) %>% distinct(Team)
+teams <- data %>% arrange(team) %>% pull("team") %>% unique()
 
 dateRangeInput2 <- function(inputId, label, minview = "days", maxview = "decades", ...) {
         d <- shiny::dateRangeInput(inputId, label, ...)
@@ -15,19 +15,19 @@ shinyUI(
                 dashboardSidebar(width = 250,
                         dateRangeInput2('year',
                                        label = 'Date range:',
-                                       start = "2010-01-01", end = "2022-10-01",
-                                       min = min(data$Date), max = max(data$Date),
+                                       start = "2010-01-01", end = max(data$date),
+                                       min = min(data$date), max = max(data$date),
                                        separator = " - ", format = "mm/yyyy",
                                        startview = 'year', language = 'en-GB',
                                        minview = "months", maxview = "years"
                         ),
-                        selectInput('x', 'Team 1 (red)', teams$Team, selected = "Qatar"),
+                        selectInput('x', 'Team 1 (red)', teams, selected = "Qatar"),
                         div(style = "margin-top:-18px"),
-                        selectInput('y', 'Team 2 (blue)', teams$Team, selected = "Ecuador"),
+                        selectInput('y', 'Team 2 (blue)', c("None", teams), selected = "Ecuador"),
                         div(style = "margin-top:-18px"),
-                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', teams$Team, selected = "Senegal")),
+                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', c("None", teams), selected = "Senegal")),
                         div(style = "margin-top:-18px"),
-                        shinyjs::disabled(selectInput('a', 'Team 4 (purple)', teams$Team, selected = "Netherlands")),
+                        shinyjs::disabled(selectInput('a', 'Team 4 (purple)', c("None", teams), selected = "Netherlands")),
                         div(style = "margin-top: 36px"),
                         tags$style(type="text/css", "#down {color: black; margin-left: 60px}"),
                         downloadButton('down', 'Download image', class="butt1")
@@ -42,26 +42,4 @@ shinyUI(
                 )
         )
                         
-        # fluidPage(
-        #         titlePanel("Historical FIFA Ranking"),
-        #         fluidRow(
-        #                 column(3,
-        #                         selectInput('x', 'Team 1', unique(data$Team), selected = "Chile")
-        #                 ),
-        #                 column(3, offset = 1,
-        #                         selectInput('y', 'Team 2', unique(data$Team), selected = "Chile")
-        #                 ),
-        #                 column(3, offset= 1,
-        #                         selectInput('z', 'Team 3', unique(data$Team), selected = "Chile")
-        #                 )
-        #         ),
-        # 
-        #         mainPanel(
-        #                 sliderInput('year', label = "Starting year", 
-        #                         min = 1993, max = max(data$ye), value = 2010,
-        #                         pre="Year: "),
-        #                 plotlyOutput('plot'),
-        #                 width=14
-        #         )
-        # )
 )

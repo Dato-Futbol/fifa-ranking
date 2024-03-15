@@ -10,5 +10,10 @@ library(shinyjs)
 
 options(shiny.usecairo = TRUE)
 
-data <- readRDS("FIFA_ranking.rds") %>%
-  mutate(Date = ymd(paste0(Date, "-01")))
+data = read_csv("ranking_fifa_historical.csv") %>% 
+       filter(!is.na(total_points)) %>%
+       mutate(team = ifelse(team == "Curaçao", "Curacao", team),
+              team = ifelse(team == "Hong Kong, China", "Hong Kong", team)) %>% 
+       group_by(date) %>% 
+       mutate(rank = rank(-total_points)) %>% 
+       rename("points" = "total_points")
