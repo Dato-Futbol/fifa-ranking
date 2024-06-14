@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
                          subtitle = paste0("Historical men's FIFA ranking\n\n",
                                            "From ", as.yearmon(input$year[1], "%B%Y"), " to ", as.yearmon(input$year[2], "%B%Y"))) +
                     scale_colour_brewer(palette = "Set1") +
-                    theme(legend.position = c(0.5, 1.05), legend.direction = "horizontal",
+                    theme(legend.position.inside = c(0.5, 1.05), legend.direction = "horizontal",
 
                           axis.text.x = element_text(angle = 90, size = 8),
                           axis.title.x = element_text(size = 14),
