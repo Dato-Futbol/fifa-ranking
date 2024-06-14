@@ -76,9 +76,9 @@ shinyServer(function(input, output, session) {
                           axis.title.y = element_text(size = 12),
                           plot.margin = margin(0.5, 0.1, 0.4, 0.2, "cm")) 
                 
-                p <- ggplotly(p, tooltip="label") %>% 
+                p <- suppressWarnings(print(ggplotly(p, tooltip="label") %>% 
                         layout(legend = list(orientation = "h", x = 0, y = 1.1),
-                               margin = list(l = 80, r = 15, b = 80, t = 10))
+                               margin = list(l = 80, r = 15, b = 80, t = 10))))
         })
         
         output$down <- downloadHandler(
