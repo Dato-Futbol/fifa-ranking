@@ -21,13 +21,13 @@ shinyUI(
                                        startview = 'year', language = 'en-GB',
                                        minview = "months", maxview = "years"
                         ),
-                        selectInput('x', 'Team 1 (red)', teams, selected = "Qatar"),
+                        selectInput('x', 'Team 1 (red)', teams, selected = "Argentina"),
                         div(style = "margin-top:-18px"),
-                        selectInput('y', 'Team 2 (blue)', c("None", teams), selected = "Ecuador"),
+                        selectInput('y', 'Team 2 (blue)', c("None", teams), selected = "Colombia"),
                         div(style = "margin-top:-18px"),
-                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', c("None", teams), selected = "Senegal")),
+                        shinyjs::disabled(selectInput('z', 'Team 3 (green)', c("None", teams), selected = "Spain")),
                         div(style = "margin-top:-18px"),
-                        shinyjs::disabled(selectInput('a', 'Team 4 (purple)', c("None", teams), selected = "Netherlands")),
+                        shinyjs::disabled(selectInput('a', 'Team 4 (purple)', c("None", teams), selected = "England")),
                         div(style = "margin-top: 36px"),
                         tags$style(type="text/css", "#down {color: black; margin-left: 60px}"),
                         downloadButton('down', 'Download image', class="butt1")
