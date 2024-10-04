@@ -10,7 +10,9 @@ library(shinyjs)
 
 options(shiny.usecairo = TRUE)
 
-data = read_csv("ranking_fifa_historical.csv", show_col_types = FALSE) %>% 
+data_path = "https://raw.githubusercontent.com/Dato-Futbol/fifa-ranking/refs/heads/master/ranking_fifa_historical.csv"
+
+data = read_csv(data_path, show_col_types = FALSE) %>% 
        filter(!is.na(total_points)) %>%
        mutate(team = ifelse(team == "Curaçao", "Curacao", team),
               team = ifelse(team == "Hong Kong, China", "Hong Kong", team),
